@@ -1,0 +1,59 @@
+#!/usr/bin/env php
+<?php
+
+    require(__DIR__ . "/../includes/config.php");
+
+    // escape user's input
+    $geo = urlencode("10001");
+
+    // numerically indexed array of weather properties
+    $weather_properties = [];
+    
+    // headers for proxy servers
+    $headers = [
+        "Accept" => "*/*",
+        "Connection" => "Keep-Alive",
+        "User-Agent" => sprintf("curl/%s", curl_version()["version"])
+    ];
+
+    // download RSS from weather.com feed
+    $context = stream_context_create([
+        "http" => [
+            "header" => implode(array_map(function($value, $key) { return sprintf("%s: %s\r\n", $key, $value); }, $headers, array_keys($headers))),
+            "method" => "GET"
+        ]
+    ]);
+    $contents = @file_get_contents("http://weather.yahooapis.com/forecastrss?p={$geo}", false, $context);
+    print("1");
+    if ($contents === false)
+    {
+        http_response_code(503);
+        exit;
+    }
+
+    // parse RSS
+    $rss = @simplexml_load_string($contents);
+    print($rss);
+    @fclose($handle);
+    if ($rss === false)
+    {
+        http_response_code(500);
+        exit;
+    }
+    
+    $array_weather[] = explode("<br />", (string) $rss->channel->item->description);
+    
+    printr($array_weather);
+    
+    // add article to array
+    $weather_properties = [
+        "img" => $array_weather[0],
+        "title" => $array_weather[1],
+        "temperature" => $array_weather[2]
+    ];
+
+    // output articles as JSON (pretty-printed for debugging convenience)
+    header("Content-type: application/json");
+    print(json_encode($weather_properties, JSON_PRETTY_PRINT));
+
+?>
