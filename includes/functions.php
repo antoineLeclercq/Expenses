@@ -59,7 +59,7 @@
             try
             {
                 // connect to database
-                $handle = new PDO('pgsql:host='.SERVER.';port=5432;dbname='.DATABASE.';user='.USERNAME.';password='.PASSWORD);
+                $handle = new PDO('pgsql:host='.SERVER.';port=5432;dbname='.DATABASE, USERNAME, PASSWORD);
                 //pgsql:user=' . USERNAME ' dbname=' . DATABASE ' password=' . PASSWORD);
 
                 // ensure that PDO::prepare returns false when passed invalid SQL
@@ -164,14 +164,14 @@
     /**
      * Sends an email, passing in parameters.
      */
-     function send_email($transaction_type, $email, $date, $symbol, $price, $shares)
-     {
-        require("libphp-phpmailer/class.phpmailer.php");
+     function send_email($email, $body, $subject, $password) {
+        require("../../PHPMailer-master/class.phpmailer.php");
+        require("../../PHPMailer-master/class.smtp.php");
 
         // extract email domain
-        $domain = substr(strrchr($_POST["email"], "@"), 1);
+        $domain = substr(strrchr($email, "@"), 1);
 
-        if ( filter_var($_POST["email"], FILTER_VALIDATE_EMAIL) && checkdnsrr($domain, 'MX') )
+        if ( filter_var($email, FILTER_VALIDATE_EMAIL) && checkdnsrr($domain, 'MX') )
         {
             // instantiate mailer
             $mail = new PHPMailer();
@@ -202,25 +202,13 @@
             $mail->SetFrom("courses.email.testing@gmail.com");
 
             // set To:
-            $mail->AddAddress($_POST["email"]);
+            $mail->AddAddress($email);
 
             // set Subject:
-            $mail->Subject = "CS50 Finance: ".$transaction_type." receipt";
-
-            $verb = NULL;
-            if ( $transaction_type == "selling" )
-            {
-                $verb = "sold";
-            }
-            else
-            {
-                $verb = "bought";
-            }
-
-            $total = '$'.($price * $shares);
+            $mail->Subject = $subject;
 
             // set body
-            $mail->Body = "Congratulations on your ".$transaction_type.". You just ".$verb." ".$shares." shares from ".$symbol." for a total amount of ".$total.".";
+            $mail->Body = $body;
 
             // send mail
             if ($mail->Send() === false)

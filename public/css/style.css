@@ -14,6 +14,11 @@ body {
     font-size: 13px;
 }
 
+tr {
+    white-space: nowrap;
+    text-align: center;
+}
+
 h1,
 h2,
 h3,
@@ -34,7 +39,10 @@ label {
  * These are some useful classes which I will need
  */
 .l-box {
-    padding: 1em;
+    width: 50%;
+    height: 40%;
+    border: 3px solid #2f8fd6;
+    padding: 2em;
 }
 
 .l-box-lrg {
@@ -42,10 +50,14 @@ label {
     border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
-.is-center {
+.is-center-text {
     text-align: center;
 }
 
+.is-center-object {
+    margin: auto;
+    margin-top: 10%;
+};
 
 
 /*
@@ -53,7 +65,7 @@ label {
  * Style the form inputs and labels
  */
 .pure-form label {
-    margin: 1em 0 0;
+    margin: auto;
     font-weight: bold;
     font-size: 100%;
 }
@@ -75,6 +87,7 @@ label {
     color: white;
     padding: 0.5em 2em;
     border-radius: 5px;
+    position: center;
 }
 
 a.pure-button-primary {
@@ -136,10 +149,10 @@ a.pure-button-primary {
     z-index: 1;
     overflow: hidden;
     /* The following styles are required for the "scroll-over" effect */
-    width: 100%;
-    height: 88%;
-    top: 0;
-    left: 0;
+    width: 99.5%;
+    height: 91%;
+    top: 8.5%;
+    left: 0.25%;
     position: fixed !important;
 }
 
@@ -149,7 +162,7 @@ a.pure-button-primary {
     height: 50%;
     margin: auto;
     position: absolute;
-    top: 100px; left: 0; bottom: 0; right: 0;
+    top: 0; left: 0; bottom: 0; right: 0;
     text-align: center;
     text-transform: uppercase;
 }
